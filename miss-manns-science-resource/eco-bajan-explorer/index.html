@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EcoBajan Explorer</title>
+    <style>
+      :root { font-family: Arial, sans-serif; color: #073b4c; background: #f5fcfa; }
+      * { box-sizing: border-box; }
+      body { margin: 0; }
+      button, input { font: inherit; }
+      button { cursor: pointer; }
+      .topbar { align-items: center; background: #05748d; color: white; display: flex; justify-content: space-between; padding: 14px clamp(18px, 5vw, 72px); }
+      .topbar a { color: #dff9f0; font-size: .9rem; font-weight: 700; text-decoration: none; }
+      .brand { font-family: Georgia, serif; font-size: clamp(1.25rem, 3vw, 1.8rem); }
+      .hero { background: linear-gradient(135deg, #a9e5dc, #dff4b0 58%, #ffe29a); overflow: hidden; padding: clamp(42px, 7vw, 78px) 24px 38px; }
+      .wrap { margin: 0 auto; width: min(1080px, 100%); }
+      .eyebrow { color: #d45436; font-size: .8rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+      h1, h2, h3 { font-family: Georgia, serif; }
+      h1 { font-size: clamp(3rem, 8vw, 5.8rem); line-height: .9; margin: 12px 0 18px; }
+      .hero p { font-size: 1.15rem; line-height: 1.55; margin: 0; max-width: 640px; }
+      .stats { display: grid; gap: 14px; grid-template-columns: repeat(3, 1fr); margin-top: 30px; max-width: 800px; }
+      .stat { background: #fffdf6; border: 2px solid #fff; border-radius: 16px; padding: 14px; }
+      .stat strong { color: #05748d; display: block; font-size: 1.5rem; }
+      .stat span { font-size: .88rem; font-weight: 700; }
+      .tip { background: #fff2b9; border: 2px solid #f0c64e; border-radius: 16px; margin-top: 20px; max-width: 800px; padding: 15px 18px; }
+      .tip strong { color: #9b5b00; }
+      main { padding: 32px 24px 76px; }
+      .nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px; }
+      .nav button { background: #e2f3ec; border: 2px solid #b8dacf; border-radius: 999px; color: #075a6d; font-weight: 800; padding: 11px 16px; }
+      .nav button.active, .nav button:hover { background: #05748d; border-color: #05748d; color: white; }
+      .panel { animation: rise .35s ease; display: none; }
+      .panel.active { display: block; }
+      @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+      h2 { font-size: clamp(2rem, 5vw, 3rem); margin: 0 0 8px; }
+      .lead { color: #42666a; line-height: 1.6; margin: 0 0 24px; }
+      .habitat-tabs { display: flex; flex-wrap: wrap; gap: 9px; margin: 22px 0; }
+      .habitat-tabs button { background: white; border: 2px solid #90c9c2; border-radius: 12px; color: #075a6d; font-weight: 800; padding: 10px 13px; }
+      .habitat-tabs button.active { background: #0a8d82; border-color: #0a8d82; color: white; }
+      .habitat { background: #e4f5f0; border-radius: 22px; padding: clamp(20px, 4vw, 36px); }
+      .species-grid { display: grid; gap: 16px; grid-template-columns: repeat(3, 1fr); margin-top: 22px; }
+      .species { background: #fffdf6; border: 0; border-radius: 16px; box-shadow: 0 4px 0 #b6dad2; color: #073b4c; min-height: 150px; padding: 18px; text-align: left; transition: transform .2s; }
+      .species:hover { transform: translateY(-4px); }
+      .species .icon { display: block; font-size: 2.2rem; margin-bottom: 10px; }
+      .species strong { display: block; font-family: Georgia, serif; font-size: 1.25rem; }
+      .species small { color: #52737a; display: block; margin-top: 6px; }
+      .video-link { color: #075a6d; display: inline-block; font-size: .88rem; font-weight: 800; margin-top: 14px; text-decoration: underline; }
+      .game { background: #f0f8d9; border-radius: 22px; padding: clamp(20px, 4vw, 34px); }
+      .cards { display: flex; flex-wrap: wrap; gap: 12px; margin: 18px 0 26px; }
+      .food-card { background: #fffdf6; border: 2px dashed #5d9e94; border-radius: 12px; color: #073b4c; font-weight: 800; padding: 12px; }
+      .food-card.selected { background: #ffe39b; border-style: solid; }
+      .slots { display: grid; gap: 12px; grid-template-columns: repeat(4, 1fr); }
+      .slot { background: white; border: 2px dashed #80b8b0; border-radius: 14px; min-height: 105px; padding: 12px; text-align: center; }
+      .slot strong { color: #0a756e; display: block; font-size: .85rem; text-transform: uppercase; }
+      .slot span { display: block; margin-top: 17px; }
+      .action { background: #d85537; border: 0; border-radius: 10px; color: white; font-weight: 800; margin-top: 22px; padding: 12px 18px; }
+      .feedback { font-weight: 800; min-height: 24px; margin: 14px 0 0; }
+      .good { color: #08715f; }
+      .bad { color: #ae3e2c; }
+      .scenario-grid { display: grid; gap: 18px; grid-template-columns: repeat(2, 1fr); }
+      .scenario, .pledge, .quiz-card { background: #fffdf6; border: 2px solid #d1e7dd; border-radius: 18px; padding: 22px; }
+      h3 { font-size: 1.4rem; margin: 0 0 9px; }
+      .switch-row { align-items: center; display: flex; gap: 12px; margin-top: 16px; }
+      .switch { appearance: none; background: #a9c6c1; border-radius: 999px; height: 28px; position: relative; width: 50px; }
+      .switch::after { background: white; border-radius: 50%; content: ''; height: 20px; left: 4px; position: absolute; top: 4px; transition: transform .2s; width: 20px; }
+      .switch:checked { background: #d85537; }
+      .switch:checked::after { transform: translateX(22px); }
+      .warning { background: #fff0e2; border-radius: 12px; color: #9b432d; display: none; line-height: 1.5; margin-top: 16px; padding: 13px; }
+      .warning.show { display: block; }
+      .pledge { margin-top: 22px; }
+      .pledge label { display: block; margin: 12px 0; }
+      .quiz-card { max-width: 760px; }
+      .choices { display: grid; gap: 10px; margin-top: 18px; }
+      .choices button { background: #f2f9f6; border: 2px solid #b8dacf; border-radius: 11px; color: #073b4c; padding: 12px; text-align: left; }
+      .choices button:hover { background: #dff4ec; }
+      .quiz-result { background: #fff2b9; border-radius: 16px; display: none; margin-top: 18px; padding: 20px; }
+      .quiz-result.show { display: block; }
+      .badge { color: #b25b00; font-family: Georgia, serif; font-size: 1.55rem; font-weight: 700; }
+      .modal { align-items: center; background: rgb(7 59 76 / .65); display: none; inset: 0; justify-content: center; padding: 20px; position: fixed; z-index: 5; }
+      .modal.show { display: flex; }
+      .modal-card { background: #fffdf6; border-radius: 20px; max-width: 520px; padding: 28px; position: relative; width: 100%; }
+      .close { background: #e2f3ec; border: 0; border-radius: 50%; color: #073b4c; font-size: 1.4rem; height: 36px; position: absolute; right: 16px; top: 16px; width: 36px; }
+      .details { color: #46676d; line-height: 1.6; }
+      @media (max-width: 720px) { .stats, .species-grid, .scenario-grid { grid-template-columns: 1fr; } .slots { grid-template-columns: repeat(2, 1fr); } }
+      @media print { .topbar, .hero, .nav, .action { display: none; } body { background: white; } .panel { display: none !important; } #quiz.panel { display: block !important; } }
+    </style>
+  </head>
+  <body>
+    <header class="topbar"><a href="/miss-manns-science-resource/">Miss Mann's Resource Page</a><div class="brand">EcoBajan Explorer 🌴</div></header>
+    <section class="hero"><div class="wrap"><div class="eyebrow">Discover Barbados' living world</div><h1>Explore. Protect.<br />Belong.</h1><p>Become an eco-detective and discover the habitats, animals, and choices that help Barbados thrive.</p><div class="stats"><div class="stat"><strong>3</strong><span>Main Local Habitats</span></div><div class="stat"><strong>20+</strong><span>Local Species</span></div><div class="stat"><strong>4</strong><span>Interactive Challenges</span></div></div><div class="tip"><strong>Daily Eco-Tip:</strong> <span id="eco-tip"></span></div></div></section>
+    <main><div class="wrap">
+      <nav class="nav" aria-label="Learning activities"><button class="active" data-panel="habitats">1. Habitat Explorer</button><button data-panel="food-chain">2. Food Chain Builder</button><button data-panel="detective">3. Eco-Detective</button><button data-panel="quiz">4. Knowledge Check</button></nav>
+      <section class="panel active" id="habitats"><h2>Habitat Explorer</h2><p class="lead">Choose a habitat, then click an organism to uncover its special Barbados story.</p><div class="habitat-tabs" id="habitat-tabs"></div><div class="habitat"><div class="eyebrow" id="habitat-place"></div><h3 id="habitat-title"></h3><div class="species-grid" id="species-grid"></div></div></section>
+      <section class="panel" id="food-chain"><h2>Build a Barbados reef food chain</h2><p class="lead">Tap a card, then tap the matching place in the food chain. Put energy in the right order.</p><div class="game"><div class="cards" id="food-cards"></div><div class="slots" id="food-slots"></div><button class="action" id="check-chain">Check Answer</button><p class="feedback" id="chain-feedback" aria-live="polite"></p></div></section>
+      <section class="panel" id="detective"><h2>Eco-Detective Conservation Simulator</h2><p class="lead">Turn on each problem to see why nature needs our care.</p><div class="scenario-grid"><article class="scenario"><h3>Plastic litter in Carlisle Bay</h3><p>What happens if plastic reaches the sea?</p><div class="switch-row"><input class="switch" type="checkbox" id="plastic" /><label for="plastic">Show the impact</label></div><div class="warning" id="plastic-warning">Coral can become stressed and bleach. Sea turtles may mistake floating plastic for food, which can make them very sick.</div></article><article class="scenario"><h3>Cutting down mangrove trees</h3><p>What happens if mangroves disappear?</p><div class="switch-row"><input class="switch" type="checkbox" id="mangrove" /><label for="mangrove">Show the impact</label></div><div class="warning" id="mangrove-warning">Without roots holding soil in place, coastal erosion increases. Young fish also lose a safe nursery habitat.</div></article></div><form class="pledge" id="pledge"><h3>My EcoBajan Pledge</h3><p>I will help protect Barbados by:</p><label><input type="checkbox" /> Using a reusable bottle or bag</label><label><input type="checkbox" /> Keeping beaches and gullies free of litter</label><label><input type="checkbox" /> Respecting plants and wildlife</label><p class="feedback good" id="pledge-feedback" aria-live="polite"></p></form></section>
+      <section class="panel" id="quiz"><h2>Knowledge Check</h2><p class="lead">Answer five questions to earn your science badge.</p><div class="quiz-card"><div class="eyebrow" id="quiz-count">Question 1 of 5</div><h3 id="quiz-question"></h3><div class="choices" id="quiz-choices"></div><p class="feedback" id="quiz-feedback" aria-live="polite"></p><div class="quiz-result" id="quiz-result"><div class="badge">Bajan Science Master</div><p id="quiz-summary"></p><button class="action" onclick="window.print()">Print or Download Summary</button></div></div></section>
+    </div></main>
+    <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"><div class="modal-card"><button class="close" id="close-modal" aria-label="Close">×</button><div class="eyebrow">Species file</div><h2 id="modal-title"></h2><div class="details" id="modal-details"></div></div></div>
+    <script>
+      const tips = ['Bring a refillable water bottle to reduce single-use plastic.', 'Leave shells and living creatures where you find them at the beach.', 'Turn off taps while brushing your teeth to save water.', 'Plant native plants to give local insects and birds food and shelter.'];
+      document.querySelector('#eco-tip').textContent = tips[Math.floor(Math.random() * tips.length)];
+      const habitats = [
+        { place: 'Graeme Hall', title: 'Mangrove Wetlands', species: [{ icon:'🌿', name:'Red Mangrove Roots', local:'Red Mangrove', type:'Plant', fact:'Its tangled roots help hold the shoreline together and create safe spaces for young fish.' }, { icon:'🦀', name:'Fiddler Crab', local:'Fiddler Crab', type:'Invertebrate', fact:'The male waves one large claw to communicate and defend its burrow.' }, { icon:'🐦', name:'Green Heron', local:'Green Heron', type:'Vertebrate', fact:'This patient hunter uses its sharp bill to catch small fish near the water.' }] },
+        { place: 'Folkestone', title: 'Coral Reefs', species: [{ icon:'🪸', name:'Brain Coral', local:'Brain Coral', type:'Invertebrate', fact:'Its folded surface looks like a brain and gives many reef creatures a place to hide.' }, { icon:'🐠', name:'Parrotfish', local:'Parrotfish', type:'Vertebrate', fact:'Its beak-like teeth scrape algae from coral, helping keep reefs healthy.' }, { icon:'🐢', name:'Hawksbill Sea Turtle', local:'Hawksbill Turtle', type:'Vertebrate', fact:'Its narrow beak helps it reach food in reef crevices.' }] },
+        { place: "Harrison's", title: 'Gully Systems', species: [{ icon:'🐒', name:'Green Monkey', local:'Green Monkey', type:'Vertebrate', fact:'Strong hands and a long tail help it climb and balance among trees.' }, { icon:'🌳', name:'Bearded Fig Tree', local:'Bearded Fig', type:'Plant', fact:'Its hanging roots give the tree its bearded look and help it gather water.' }, { icon:'🐸', name:'Whistling Frog', local:'Whistling Frog', type:'Vertebrate', fact:'Its call sounds like a whistle and helps it communicate after rain.' }] }
+      ];
+      let habitatIndex = 0;
+      const tabs = document.querySelector('#habitat-tabs'), grid = document.querySelector('#species-grid');
+      function renderHabitat() { const habitat = habitats[habitatIndex]; tabs.innerHTML = habitats.map((item, index) => `<button class="${index === habitatIndex ? 'active' : ''}" data-habitat="${index}">${item.title} (${item.place})</button>`).join(''); document.querySelector('#habitat-place').textContent = habitat.place; document.querySelector('#habitat-title').textContent = habitat.title; grid.innerHTML = habitat.species.map((item, index) => `<article class="species" data-species="${index}"><span class="icon">${item.icon}</span><strong>${item.name}</strong><button class="species-details" type="button">Investigate this species</button><a class="video-link" href="https://www.youtube.com/results?search_query=${encodeURIComponent(`Barbados ${item.name}`)}" target="_blank" rel="noopener">Watch videos ↗</a></article>`).join(''); }
+      tabs.addEventListener('click', event => { if (event.target.dataset.habitat) { habitatIndex = Number(event.target.dataset.habitat); renderHabitat(); } });
+      grid.addEventListener('click', event => { const card = event.target.closest('.species'); if (!card || event.target.closest('a')) return; const item = habitats[habitatIndex].species[Number(card.dataset.species)]; document.querySelector('#modal-title').textContent = item.name; document.querySelector('#modal-details').innerHTML = `<p><strong>Local Bajan name:</strong> ${item.local}</p><p><strong>Scientific classification:</strong> ${item.type}</p><p><strong>Super adaptation:</strong> ${item.fact}</p>`; document.querySelector('#modal').classList.add('show'); });
+      document.querySelector('#close-modal').onclick = () => document.querySelector('#modal').classList.remove('show'); document.querySelector('#modal').onclick = event => { if (event.target.id === 'modal') event.currentTarget.classList.remove('show'); }; renderHabitat();
+      document.querySelectorAll('.nav button').forEach(button => button.onclick = () => { document.querySelectorAll('.nav button, .panel').forEach(item => item.classList.remove('active')); button.classList.add('active'); document.querySelector(`#${button.dataset.panel}`).classList.add('active'); });
+      const foods = [{ name:'Phytoplankton', role:'Producer', icon:'🌱' }, { name:'Parrotfish', role:'Primary Consumer', icon:'🐠' }, { name:'Barracuda', role:'Secondary Consumer', icon:'🐟' }, { name:'Marine Bacteria', role:'Decomposer', icon:'🦠' }]; let chosenFood = null, placed = {};
+      const cardBox = document.querySelector('#food-cards'), slotBox = document.querySelector('#food-slots');
+      function renderFood() { cardBox.innerHTML = foods.map((food, index) => `<button class="food-card ${chosenFood === index ? 'selected' : ''}" data-food="${index}">${food.icon} ${food.name}</button>`).join(''); slotBox.innerHTML = foods.map(food => `<button class="slot" data-role="${food.role}"><strong>${food.role}</strong><span>${placed[food.role] ? `${placed[food.role].icon} ${placed[food.role].name}` : 'Tap a card, then here'}</span></button>`).join(''); }
+      cardBox.onclick = event => { const card = event.target.closest('.food-card'); if (card) { chosenFood = Number(card.dataset.food); renderFood(); } }; slotBox.onclick = event => { const slot = event.target.closest('.slot'); if (slot && chosenFood !== null) { placed[slot.dataset.role] = foods[chosenFood]; chosenFood = null; renderFood(); } }; document.querySelector('#check-chain').onclick = () => { const correct = foods.every(food => placed[food.role]?.name === food.name); const feedback = document.querySelector('#chain-feedback'); feedback.className = `feedback ${correct ? 'good' : 'bad'}`; feedback.textContent = correct ? 'Excellent! You built a healthy reef food chain.' : 'Almost there. Think about who makes food, who eats, and who recycles nutrients.'; }; renderFood();
+      [['plastic','plastic-warning'],['mangrove','mangrove-warning']].forEach(([switchId, warningId]) => document.querySelector(`#${switchId}`).onchange = event => document.querySelector(`#${warningId}`).classList.toggle('show', event.target.checked));
+      document.querySelector('#pledge').onchange = () => { const checked = document.querySelectorAll('#pledge input:checked').length; document.querySelector('#pledge-feedback').textContent = checked === 3 ? 'Wonderful promise, EcoBajan Explorer!' : checked ? `${checked} good action${checked > 1 ? 's' : ''} chosen!` : ''; };
+      const questions = [{ q:'Which habitat has tangled roots that protect the shore?', a:['Mangrove wetlands','Coral reefs','Gully systems'], c:0 }, { q:'What does a parrotfish eat from coral?', a:['Algae','Plastic','Sand'], c:0 }, { q:'Which animal may mistake plastic for food?', a:['Hawksbill sea turtle','Green monkey','Fiddler crab'], c:0 }, { q:'What can happen when mangroves are cut down?', a:['More coastal erosion','More fish nurseries','Cleaner beaches'], c:0 }, { q:'Which organism is a producer?', a:['Phytoplankton','Barracuda','Marine bacteria'], c:0 }]; let questionIndex = 0, quizScore = 0;
+      function renderQuestion() { const question = questions[questionIndex]; document.querySelector('#quiz-count').textContent = `Question ${questionIndex + 1} of ${questions.length}`; document.querySelector('#quiz-question').textContent = question.q; document.querySelector('#quiz-choices').innerHTML = question.a.map((answer, index) => `<button data-answer="${index}">${answer}</button>`).join(''); document.querySelector('#quiz-feedback').textContent = ''; }
+      document.querySelector('#quiz-choices').onclick = event => { const button = event.target.closest('button'); if (!button) return; const correct = Number(button.dataset.answer) === questions[questionIndex].c; if (correct) quizScore++; const feedback = document.querySelector('#quiz-feedback'); feedback.className = `feedback ${correct ? 'good' : 'bad'}`; feedback.textContent = correct ? 'Correct! Great detective work.' : `Good try! The answer is ${questions[questionIndex].a[questions[questionIndex].c]}.`; document.querySelectorAll('#quiz-choices button').forEach(item => item.disabled = true); setTimeout(() => { questionIndex++; if (questionIndex < questions.length) renderQuestion(); else { document.querySelector('#quiz-count').textContent = 'Challenge complete'; document.querySelector('#quiz-question').textContent = 'You did it!'; document.querySelector('#quiz-choices').innerHTML = ''; document.querySelector('#quiz-result').classList.add('show'); document.querySelector('#quiz-summary').textContent = `You scored ${quizScore} out of ${questions.length}. Keep exploring and caring for Barbados!`; } }, 850); }; renderQuestion();
+    </script>
+  </body>
+</html>

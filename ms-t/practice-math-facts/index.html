@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dino Snack Math | Ms. Tea's Page</title>
+    <style>
+      :root { font-family: Arial, sans-serif; color: #183e35; background: #f5f0e7; }
+      * { box-sizing: border-box; }
+      body { margin: 0; min-height: 100vh; padding: 24px; }
+      main { width: min(1020px, 100%); margin: 0 auto; }
+      .banner { padding: clamp(32px, 7vw, 64px); border-radius: 28px; background: #d5e8e1; text-align: center; }
+      .eyebrow { margin: 0; color: #a24b36; font-size: .8rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+      h1, h2 { font-family: Georgia, serif; }
+      h1 { margin: 12px 0; font-size: clamp(2.7rem, 8vw, 5rem); line-height: 1; }
+      .intro { max-width: 650px; margin: 0 auto; color: #48606a; font-size: 1.1rem; line-height: 1.6; }
+      .game { position: relative; overflow: hidden; margin-top: 28px; padding: clamp(20px, 5vw, 38px); border: 5px solid #42683a; border-radius: 28px; background: linear-gradient(#9fd9bf 0 40%, #e5d776 40% 100%); isolation: isolate; }
+      .game::before, .game::after { position: absolute; z-index: -1; font-size: clamp(4rem, 10vw, 8rem); opacity: .75; content: "🌿"; }
+      .game::before { top: 6px; left: 4px; transform: rotate(-20deg); }
+      .game::after { right: 2px; bottom: 130px; transform: rotate(25deg); }
+      .canopy { position: absolute; top: -20px; right: 12%; left: 12%; height: 70px; border-radius: 0 0 50% 50%; background: repeating-linear-gradient(110deg, #22583c 0 24px, #397747 24px 48px); opacity: .75; z-index: -1; }
+      .scoreboard { display: flex; justify-content: space-between; gap: 16px; color: #fffaf2; font-weight: 700; text-shadow: 0 2px 1px #264c30; }
+      .sound-controls { display: flex; justify-content: center; gap: 10px; margin: 18px 0 10px; }
+      .sound-button, .new-game { padding: 10px 16px; border: 0; border-radius: 999px; background: #fff8e9; color: #264c30; font: inherit; font-weight: 700; cursor: pointer; box-shadow: 0 3px 0 rgba(38, 76, 48, .26); }
+      .sound-button[aria-pressed="true"] { background: #f4c867; }
+      .question { margin: 20px 0 8px; text-align: center; color: #173e34; font-size: clamp(2.5rem, 9vw, 4.8rem); text-shadow: 0 2px #fef8dc; }
+      .instruction { margin: 0; text-align: center; color: #183e35; font-size: 1.05rem; font-weight: 700; }
+      .dino-area { display: grid; grid-template-columns: 1fr minmax(180px, 250px) 1fr; align-items: center; gap: 16px; min-height: 225px; margin: 18px 0 10px; }
+      .speech { padding: 14px; border-radius: 18px; background: #fffdf7; color: #385a47; line-height: 1.45; text-align: center; box-shadow: 0 4px 0 rgba(38, 76, 48, .15); }
+      .speech strong { display: block; color: #183e35; }
+      .dino { position: relative; width: 210px; height: 150px; margin: auto; animation: idle 2.4s ease-in-out infinite; }
+      .dino .tail { position: absolute; top: 64px; left: -20px; width: 110px; height: 48px; border-radius: 90% 0 0 90%; background: var(--dino); transform: rotate(15deg); transform-origin: right; }
+      .dino .body { position: absolute; bottom: 16px; left: 44px; width: 132px; height: 85px; border: 4px solid #173e34; border-radius: 53% 47% 39% 42%; background: var(--dino); }
+      .dino .belly { position: absolute; bottom: 11px; left: 61px; width: 80px; height: 47px; border-radius: 50%; background: var(--belly); }
+      .dino .head { position: absolute; top: 8px; right: 5px; width: 82px; height: 72px; border: 4px solid #173e34; border-radius: 55% 50% 46% 42%; background: var(--dino); }
+      .dino .eye { position: absolute; top: 24px; right: 26px; width: 13px; height: 13px; border-radius: 50%; background: white; }
+      .dino .eye::after { position: absolute; top: 4px; left: 4px; width: 6px; height: 6px; border-radius: 50%; background: #183e35; content: ""; }
+      .dino .smile { position: absolute; top: 51px; right: 16px; width: 28px; height: 13px; border-bottom: 4px solid #173e34; border-radius: 50%; }
+      .dino .leg { position: absolute; bottom: 0; width: 27px; height: 42px; border: 4px solid #173e34; border-top: 0; border-radius: 0 0 12px 12px; background: var(--dino); }
+      .dino .leg.one { left: 78px; } .dino .leg.two { left: 138px; }
+      .dino.spiky .spikes { position: absolute; top: 29px; left: 66px; width: 80px; height: 25px; background: repeating-linear-gradient(120deg, transparent 0 12px, #f6d05c 13px 21px); transform: rotate(-12deg); }
+      .dino.longneck .head { top: -5px; right: 18px; border-radius: 50%; } .dino.longneck .neck { position: absolute; top: 34px; right: 56px; width: 34px; height: 80px; border: 4px solid #173e34; border-radius: 50%; background: var(--dino); transform: rotate(21deg); }
+      .dino.triceratops .head::before { position: absolute; top: -18px; left: 2px; width: 65px; height: 35px; border-radius: 70% 20% 50% 20%; background: var(--dino); content: ""; transform: rotate(-18deg); }
+      .dino.triceratops .head::after { position: absolute; top: 16px; left: -24px; border-top: 8px solid transparent; border-right: 30px solid #f4e8ce; border-bottom: 8px solid transparent; content: ""; }
+      .dino.dance { animation: dance .55s ease-in-out 3; }
+      .dino.dance .tail { animation: tail .28s ease-in-out 6; }
+      .dino.sad { animation: sad .45s ease-in-out 2; filter: saturate(.6); }
+      @keyframes idle { 50% { transform: translateY(-6px) rotate(1deg); } }
+      @keyframes dance { 25% { transform: translate(-12px, -18px) rotate(-8deg); } 50% { transform: translate(12px, 2px) rotate(8deg); } 75% { transform: translate(-8px, -14px) rotate(-5deg); } }
+      @keyframes tail { 50% { transform: rotate(-18deg); } }
+      @keyframes sad { 50% { transform: translateY(8px) rotate(-8deg); } }
+      .snacks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 20px; }
+      .snack { position: relative; min-height: 105px; padding: 15px 10px 9px; border: 3px solid #5b3b26; border-radius: 48% 42% 50% 38%; color: #173e34; font: 700 clamp(1.2rem, 4vw, 1.7rem) Georgia, serif; cursor: pointer; box-shadow: 0 6px 0 rgba(48, 68, 31, .38); transition: transform .15s, box-shadow .15s; }
+      .snack.meat { background: #d97562; } .snack.plant { background: #99c85d; border-radius: 35% 60% 38% 60%; }
+      .snack::before { display: block; height: 30px; font: 1.8rem Arial, sans-serif; content: "🍖"; } .snack.plant::before { content: "🌿"; }
+      .snack:hover, .snack:focus-visible { transform: translateY(-5px) rotate(-2deg); box-shadow: 0 10px 0 rgba(48, 68, 31, .3); }
+      .snack:disabled { cursor: default; opacity: .72; }
+      .feedback { min-height: 28px; margin: 22px 0 0; text-align: center; color: #173e34; font-weight: 700; } .feedback.wrong { color: #8b2e26; }
+      .new-game { display: block; margin: 15px auto 0; background: #bd684b; color: #fffaf2; }
+      .home-link { display: inline-block; margin-top: 28px; color: #315e65; font-weight: 700; }
+      @media (max-width: 650px) { .dino-area { grid-template-columns: 1fr; } .speech:first-child { order: -1; } .snacks { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header class="banner"><p class="eyebrow">Ms. Tea's classroom</p><h1>Dino Snack Math</h1><p class="intro">Explore the jungle and feed a hungry dinosaur the snack that solves each multiplication problem.</p></header>
+      <section class="game" aria-label="Jungle multiplication game">
+        <div class="canopy"></div>
+        <div class="scoreboard"><span id="score">Points: 0</span><span id="round">Round 1</span></div>
+        <div class="sound-controls"><button class="sound-button" id="musicButton" type="button" aria-pressed="false">Play jungle music</button><button class="sound-button" id="effectsButton" type="button" aria-pressed="true">Sound effects: on</button></div>
+        <h2 class="question" id="question">0 x 0 = ?</h2><p class="instruction">Choose a plant or meat snack. It may show a number or a multiplication fact!</p>
+        <div class="dino-area"><div class="speech" id="speech"><strong>Chomp, chomp!</strong>Which snack solves the problem?</div><div class="dino spiky" id="dino" style="--dino:#65a96a;--belly:#d8e8a8" aria-label="A friendly green cartoon dinosaur"><span class="tail"></span><span class="spikes"></span><span class="neck"></span><span class="body"></span><span class="belly"></span><span class="head"></span><span class="eye"></span><span class="smile"></span><span class="leg one"></span><span class="leg two"></span></div><div class="speech"><strong>Jungle clue</strong>A correct snack earns a point and a silly dinosaur dance!</div></div>
+        <div class="snacks" id="snacks" aria-label="Snack choices"></div><p class="feedback" id="feedback" aria-live="polite"></p><button class="new-game" id="newGame" type="button">Start a New Jungle Game</button>
+      </section>
+      <a class="home-link" href="/ms-t/">Back to Ms. Tea's Page</a>
+    </main>
+    <script>
+      const question = document.querySelector('#question'), snacks = document.querySelector('#snacks'), scoreDisplay = document.querySelector('#score'), roundDisplay = document.querySelector('#round'), feedback = document.querySelector('#feedback'), dino = document.querySelector('#dino'), speech = document.querySelector('#speech'), musicButton = document.querySelector('#musicButton'), effectsButton = document.querySelector('#effectsButton');
+      let score = 0, round = 1, answer = 0, locked = false, effectsOn = true, musicOn = false, audioContext, musicTimer;
+      const dinosaurs = [{ kind: 'spiky', color: '#65a96a', belly: '#d8e8a8' }, { kind: 'longneck', color: '#6ba8cf', belly: '#d6e8e9' }, { kind: 'triceratops', color: '#bc8bbd', belly: '#f0d6bd' }];
+      function audio() { audioContext ||= new AudioContext(); if (audioContext.state === 'suspended') audioContext.resume(); return audioContext; }
+      function tone(frequency, seconds, type = 'sine', delay = 0, volume = .06) { if (!effectsOn) return; const ctx = audio(), osc = ctx.createOscillator(), gain = ctx.createGain(); osc.type = type; osc.frequency.setValueAtTime(frequency, ctx.currentTime + delay); gain.gain.setValueAtTime(volume, ctx.currentTime + delay); gain.gain.exponentialRampToValueAtTime(.001, ctx.currentTime + delay + seconds); osc.connect(gain).connect(ctx.destination); osc.start(ctx.currentTime + delay); osc.stop(ctx.currentTime + delay + seconds); }
+      function chomp() { tone(210, .11, 'square', 0, .08); tone(120, .15, 'sawtooth', .1, .06); tone(430, .18, 'sine', .2, .05); }
+      function growl() { tone(95, .35, 'sawtooth', 0, .07); tone(70, .45, 'triangle', .12, .06); }
+      function playMusic() { clearInterval(musicTimer); const notes = [262, 330, 392, 330, 294, 349, 440, 349]; let note = 0; musicTimer = setInterval(() => { if (musicOn) { const wasOn = effectsOn; effectsOn = true; tone(notes[note++ % notes.length], .22, 'triangle', 0, .025); effectsOn = wasOn; } }, 360); }
+      function shuffle(items) { return items.sort(() => Math.random() - .5); }
+      function wrongFact(correct) { let a = Math.floor(Math.random() * 13), b = Math.floor(Math.random() * 13); while (a * b === correct) { a = Math.floor(Math.random() * 13); b = Math.floor(Math.random() * 13); } return `${a} x ${b}`; }
+      function wrongNumber(correct) { let n = Math.floor(Math.random() * 145); while (n === correct) n = Math.floor(Math.random() * 145); return String(n); }
+      function showDinosaur() { const d = dinosaurs[(round - 1) % dinosaurs.length]; dino.className = `dino ${d.kind}`; dino.style.setProperty('--dino', d.color); dino.style.setProperty('--belly', d.belly); }
+      function newRound() { locked = false; const first = Math.floor(Math.random() * 13), second = Math.floor(Math.random() * 13); answer = first * second; question.textContent = `${first} x ${second} = ?`; roundDisplay.textContent = `Round ${round}`; feedback.textContent = ''; feedback.className = 'feedback'; speech.innerHTML = '<strong>Chomp, chomp!</strong>Which snack solves the problem?'; showDinosaur(); const choices = [{ label: String(answer), correct: true }, { label: `${second} x ${first}`, correct: true }, { label: wrongNumber(answer), correct: false }, { label: wrongFact(answer), correct: false }, { label: wrongNumber(answer), correct: false }, { label: wrongFact(answer), correct: false }]; snacks.innerHTML = ''; shuffle(choices).forEach((choice, index) => { const snack = document.createElement('button'); snack.className = `snack ${index % 2 ? 'plant' : 'meat'}`; snack.type = 'button'; snack.textContent = choice.label; snack.setAttribute('aria-label', `Snack: ${choice.label}`); snack.addEventListener('click', () => chooseSnack(choice.correct)); snacks.appendChild(snack); }); }
+      function chooseSnack(correct) { if (locked) return; if (correct) { locked = true; score++; scoreDisplay.textContent = `Points: ${score}`; feedback.textContent = 'Yum! Perfect snack! You earned a point.'; speech.innerHTML = '<strong>Delicious!</strong>Happy jungle dance time!'; chomp(); dino.classList.add('dance'); [...snacks.children].forEach((snack) => snack.disabled = true); setTimeout(() => { round++; newRound(); }, 1700); } else { feedback.textContent = 'Oh no! Tummy rumble... Try a different snack.'; feedback.className = 'feedback wrong'; speech.innerHTML = '<strong>Rumble, rumble!</strong>That snack does not match. Please try again!'; growl(); dino.classList.add('sad'); setTimeout(() => dino.classList.remove('sad'), 900); } }
+      musicButton.addEventListener('click', () => { musicOn = !musicOn; if (musicOn) { audio(); playMusic(); musicButton.textContent = 'Jungle music: on'; } else { clearInterval(musicTimer); musicButton.textContent = 'Play jungle music'; } musicButton.setAttribute('aria-pressed', musicOn); });
+      effectsButton.addEventListener('click', () => { effectsOn = !effectsOn; effectsButton.textContent = `Sound effects: ${effectsOn ? 'on' : 'off'}`; effectsButton.setAttribute('aria-pressed', effectsOn); });
+      document.querySelector('#newGame').addEventListener('click', () => { score = 0; round = 1; scoreDisplay.textContent = 'Points: 0'; newRound(); }); newRound();
+    </script>
+  </body>
+</html>
